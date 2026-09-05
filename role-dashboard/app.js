@@ -71,7 +71,12 @@ app.use((req, res) => {
 // Central error handler
 app.use((err, req, res, next) => {
   console.error(err);
-  res.status(500).render('errors/500', { title: 'Server Error', layout: false });
+  res.status(500).render('errors/500', {
+    title: 'Server Error',
+    layout: false,
+    debugMessage: err.message,
+    debugStack: err.stack,
+  });
 });
 
 const PORT = process.env.PORT || 3000;

@@ -12,6 +12,13 @@
     <p class="fs-4">Something Went Wrong</p>
     <p class="text-muted">An unexpected error occurred. Please try again.</p>
     <a href="/dashboard" class="btn btn-primary mt-2">Back to Dashboard</a>
+    <% if (typeof debugMessage !== 'undefined' && debugMessage) { %>
+      <div class="alert alert-danger text-start mt-4" style="max-width: 800px; white-space: pre-wrap; font-family: monospace; font-size: 0.8rem;">
+        <strong><%= debugMessage %></strong>
+        <hr>
+        <%= debugStack %>
+      </div>
+    <% } %>
   </div>
 </body>
 </html>

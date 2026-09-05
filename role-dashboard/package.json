@@ -13,7 +13,12 @@
     "db:reset": "npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
     "db:fresh": "rimraf database.sqlite && npm run db:migrate && npm run db:seed"
   },
-  "keywords": ["rbac", "dashboard", "express", "sequelize"],
+  "keywords": [
+    "rbac",
+    "dashboard",
+    "express",
+    "sequelize"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
@@ -34,5 +39,8 @@
     "nodemon": "^3.1.4",
     "rimraf": "^5.0.7",
     "sequelize-cli": "^6.6.2"
+  },
+  "allowScripts": {
+    "sqlite3@5.1.7": true
   }
 }

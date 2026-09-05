@@ -55,3 +55,42 @@ exports.logout = (req, res) => {
     res.redirect('/login');
   });
 };
+
+exports.showRegister = (req, res) => {
+  res.render('register', { title: 'Register' });
+};
+
+// Public self-registration. Deliberately ignores any role the client might
+// submit and always creates the account as "Employee" (the lowest-privilege
+// role) - promoting someone to Manager/Admin is an Admin-only action done
+// afterwards from the Users page, never something a signup form can grant.
+exports.register = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    req.flash('error', errors.array()[0].msg);
+    return res.redirect('/register');
+  }
+
+  const { name, email, password } = req.body;
+
+  try {
+    const employeeRole = await Role.findOne({ where: { name: 'Employee' } });
+    if (!employeeRole) {
+      req.flash('error', 'Registration is not available right now. Please contact an administrator.');
+      return res.redirect('/register');
+    }
+
+    const hash = await bcrypt.hash(password, 10);
+    const user = await User.create({ name, email, password: hash, roleId: employeeRole.id });
+
+    // Auto sign-in the freshly created account.
+    req.session.user = { id: user.id, name: user.name, email: user.email, role: employeeRole.name };
+    req.flash('success', 'Welcome! Your account has been created.');
+    return res.redirect('/dashboard');
+  } catch (err) {
+    const message =
+      err.name === 'SequelizeUniqueConstraintError' ? 'That email is already registered.' : 'Could not create your account. Please try again.';
+    req.flash('error', message);
+    return res.redirect('/register');
+  }
+};

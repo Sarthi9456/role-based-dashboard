@@ -1,0 +1,39 @@
+<div class="login-wrapper d-flex align-items-center justify-content-center">
+  <div class="card shadow-sm login-card">
+    <div class="card-body p-4">
+      <div class="text-center mb-4">
+        <i class="bi bi-person-plus-fill fs-1 text-primary"></i>
+        <h4 class="mt-2 mb-0">Create Account</h4>
+        <small class="text-muted">New accounts start as Employee</small>
+      </div>
+
+      <form action="/register" method="POST">
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          <input type="text" name="name" class="form-control" required autofocus placeholder="Jane Doe">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email address</label>
+          <input type="email" name="email" class="form-control" required placeholder="jane@example.com">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" name="password" class="form-control" required minlength="6" placeholder="At least 6 characters">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Confirm Password</label>
+          <input type="password" name="confirmPassword" class="form-control" required minlength="6" placeholder="Re-enter password">
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Create Account</button>
+      </form>
+
+      <hr>
+      <p class="small text-muted text-center mb-0">
+        Already have an account? <a href="/login">Log in</a>
+      </p>
+      <p class="small text-muted text-center mt-2 mb-0">
+        Need Manager or Admin access? Ask an existing Admin to update your role from the Users page after you sign up.
+      </p>
+    </div>
+  </div>
+</div>

@@ -63,7 +63,9 @@ exports.show = async (req, res) => {
       {
         model: Task,
         as: 'tasks',
+        separate: true, // runs as its own query - avoids breaking when combined with other to-many includes above
         include: [{ model: User, as: 'assignee', attributes: ['id', 'name'] }],
+        order: [['createdAt', 'DESC']],
       },
     ],
   });
