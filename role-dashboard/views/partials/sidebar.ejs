@@ -1,0 +1,26 @@
+<nav class="sidebar bg-white border-end p-3">
+  <ul class="nav nav-pills flex-column gap-1">
+    <li class="nav-item">
+      <a class="nav-link <%= currentPath.startsWith('/dashboard') ? 'active' : 'text-dark' %>" href="/dashboard">
+        <i class="bi bi-speedometer2 me-2"></i>Dashboard
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link <%= currentPath.startsWith('/projects') ? 'active' : 'text-dark' %>" href="/projects">
+        <i class="bi bi-diagram-3 me-2"></i>Projects
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link <%= currentPath.startsWith('/tasks') ? 'active' : 'text-dark' %>" href="/tasks">
+        <i class="bi bi-check2-square me-2"></i>Tasks
+      </a>
+    </li>
+    <% if (currentUser.role === 'Admin' || currentUser.role === 'Manager') { %>
+      <li class="nav-item">
+        <a class="nav-link <%= currentPath.startsWith('/users') ? 'active' : 'text-dark' %>" href="/users">
+          <i class="bi bi-people me-2"></i>Users
+        </a>
+      </li>
+    <% } %>
+  </ul>
+</nav>

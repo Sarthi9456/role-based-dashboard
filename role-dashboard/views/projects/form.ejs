@@ -1,0 +1,45 @@
+<h3 class="mb-4"><%= project ? 'Edit Project' : 'New Project' %></h3>
+
+<div class="card shadow-sm" style="max-width: 720px;">
+  <div class="card-body">
+    <form action="<%= project ? `/projects/${project.id}?_method=PUT` : '/projects' %>" method="POST">
+      <div class="mb-3">
+        <label class="form-label">Project Name</label>
+        <input type="text" name="name" class="form-control" value="<%= project ? project.name : '' %>" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea name="description" class="form-control" rows="3"><%= project ? (project.description || '') : '' %></textarea>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label">Start Date</label>
+          <input type="date" name="startDate" class="form-control" value="<%= project ? project.startDate : '' %>" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">End Date</label>
+          <input type="date" name="endDate" class="form-control" value="<%= project && project.endDate ? project.endDate : '' %>">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Status</label>
+        <select name="status" class="form-select">
+          <% ['Pending', 'In Progress', 'Completed'].forEach(function(s) { %>
+            <option value="<%= s %>" <%= project && project.status === s ? 'selected' : '' %>><%= s %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Assigned Employees</label>
+        <select name="employeeIds" class="form-select" multiple size="6">
+          <% employees.forEach(function(e) { %>
+            <option value="<%= e.id %>" <%= selectedEmployeeIds.map(Number).includes(e.id) ? 'selected' : '' %>><%= e.name %></option>
+          <% }) %>
+        </select>
+        <small class="text-muted">Hold Ctrl / Cmd to select multiple employees.</small>
+      </div>
+      <button type="submit" class="btn btn-primary">Save</button>
+      <a href="/projects" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+  </div>
+</div>

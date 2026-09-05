@@ -1,0 +1,93 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0"><%= currentUser.role === 'Employee' ? 'My Tasks' : 'Tasks' %></h3>
+  <% if (currentUser.role === 'Admin' || currentUser.role === 'Manager') { %>
+    <a href="/tasks/new" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>New Task</a>
+  <% } %>
+</div>
+
+<form class="row g-2 mb-3" method="GET" action="/tasks">
+  <div class="col-auto">
+    <input type="text" name="search" value="<%= search %>" class="form-control" placeholder="Search by title...">
+  </div>
+  <div class="col-auto">
+    <select name="status" class="form-select">
+      <option value="">All statuses</option>
+      <% ['Pending', 'In Progress', 'Completed'].forEach(function(s) { %>
+        <option value="<%= s %>" <%= statusFilter === s ? 'selected' : '' %>><%= s %></option>
+      <% }) %>
+    </select>
+  </div>
+  <div class="col-auto">
+    <select name="priority" class="form-select">
+      <option value="">All priorities</option>
+      <% ['Low', 'Medium', 'High'].forEach(function(p) { %>
+        <option value="<%= p %>" <%= priorityFilter === p ? 'selected' : '' %>><%= p %></option>
+      <% }) %>
+    </select>
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-outline-secondary" type="submit">Filter</button>
+  </div>
+</form>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Title</th>
+          <th>Project</th>
+          <th>Assignee</th>
+          <th>Priority</th>
+          <th>Due Date</th>
+          <th>Status</th>
+          <% if (currentUser.role === 'Admin' || currentUser.role === 'Manager') { %><th class="text-end">Actions</th><% } %>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (tasks.length === 0) { %>
+          <tr><td colspan="7" class="text-center text-muted py-4">No tasks found.</td></tr>
+        <% } %>
+        <% tasks.forEach(function(t) { %>
+          <tr>
+            <td><%= t.title %></td>
+            <td><%= t.project ? t.project.name : '—' %></td>
+            <td><%= t.assignee ? t.assignee.name : 'Unassigned' %></td>
+            <td>
+              <% const pClass = t.priority === 'High' ? 'bg-danger' : t.priority === 'Medium' ? 'bg-warning' : 'bg-secondary'; %>
+              <span class="badge <%= pClass %>"><%= t.priority %></span>
+            </td>
+            <td><%= t.dueDate || '—' %></td>
+            <td>
+              <% const canUpdateStatus = currentUser.role !== 'Employee' || (t.assignee && t.assignee.id === currentUser.id); %>
+              <% if (canUpdateStatus) { %>
+                <form action="/tasks/<%= t.id %>/status?_method=PATCH" method="POST" class="d-flex gap-1">
+                  <select name="status" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
+                    <% ['Pending', 'In Progress', 'Completed'].forEach(function(s) { %>
+                      <option value="<%= s %>" <%= t.status === s ? 'selected' : '' %>><%= s %></option>
+                    <% }) %>
+                  </select>
+                </form>
+              <% } else { %>
+                <span class="badge bg-secondary"><%= t.status %></span>
+              <% } %>
+            </td>
+            <% if (currentUser.role === 'Admin' || currentUser.role === 'Manager') { %>
+              <td class="text-end">
+                <a href="/tasks/<%= t.id %>/edit" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                <% if (currentUser.role === 'Admin') { %>
+                  <form action="/tasks/<%= t.id %>?_method=DELETE" method="POST" class="d-inline"
+                        onsubmit="return confirm('Delete this task?');">
+                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                  </form>
+                <% } %>
+              </td>
+            <% } %>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/pagination', { page, totalPages, baseUrl: '/tasks', extraQuery: `&search=${search}&status=${statusFilter}&priority=${priorityFilter}` }) %>

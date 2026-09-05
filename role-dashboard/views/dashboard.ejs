@@ -1,0 +1,53 @@
+<h2 class="mb-1">Welcome, <%= currentUser.name %> 👋</h2>
+<p class="text-muted mb-4">Here's what's happening, based on your <strong><%= currentUser.role %></strong> access.</p>
+
+<div class="row g-3 mb-4">
+  <% if (currentUser.role === 'Admin') { %>
+    <div class="col-md-4 col-lg-2"><div class="stat-card bg-primary"><i class="bi bi-people"></i><h3><%= stats.totalUsers %></h3><p>Total Users</p></div></div>
+    <div class="col-md-4 col-lg-2"><div class="stat-card bg-info"><i class="bi bi-diagram-3"></i><h3><%= stats.totalProjects %></h3><p>Total Projects</p></div></div>
+    <div class="col-md-4 col-lg-2"><div class="stat-card bg-success"><i class="bi bi-play-circle"></i><h3><%= stats.activeProjects %></h3><p>Active Projects</p></div></div>
+    <div class="col-md-4 col-lg-2"><div class="stat-card bg-warning"><i class="bi bi-hourglass-split"></i><h3><%= stats.pendingTasks %></h3><p>Pending Tasks</p></div></div>
+    <div class="col-md-4 col-lg-2"><div class="stat-card bg-success"><i class="bi bi-check2-circle"></i><h3><%= stats.completedTasks %></h3><p>Completed Tasks</p></div></div>
+    <div class="col-md-4 col-lg-2"><div class="stat-card bg-secondary"><i class="bi bi-list-task"></i><h3><%= stats.totalTasks %></h3><p>Total Tasks</p></div></div>
+  <% } else if (currentUser.role === 'Manager') { %>
+    <div class="col-md-4 col-lg-2"><div class="stat-card bg-primary"><i class="bi bi-people"></i><h3><%= stats.totalEmployees %></h3><p>Employees</p></div></div>
+    <div class="col-md-4 col-lg-2"><div class="stat-card bg-info"><i class="bi bi-diagram-3"></i><h3><%= stats.totalProjects %></h3><p>Total Projects</p></div></div>
+    <div class="col-md-4 col-lg-2"><div class="stat-card bg-success"><i class="bi bi-play-circle"></i><h3><%= stats.activeProjects %></h3><p>Active Projects</p></div></div>
+    <div class="col-md-4 col-lg-2"><div class="stat-card bg-warning"><i class="bi bi-hourglass-split"></i><h3><%= stats.pendingTasks %></h3><p>Pending Tasks</p></div></div>
+    <div class="col-md-4 col-lg-2"><div class="stat-card bg-success"><i class="bi bi-check2-circle"></i><h3><%= stats.completedTasks %></h3><p>Completed Tasks</p></div></div>
+    <div class="col-md-4 col-lg-2"><div class="stat-card bg-secondary"><i class="bi bi-list-task"></i><h3><%= stats.totalTasks %></h3><p>Total Tasks</p></div></div>
+  <% } else { %>
+    <div class="col-md-3"><div class="stat-card bg-primary"><i class="bi bi-diagram-3"></i><h3><%= stats.myProjects %></h3><p>My Projects</p></div></div>
+    <div class="col-md-3"><div class="stat-card bg-secondary"><i class="bi bi-list-task"></i><h3><%= stats.myTasks %></h3><p>My Tasks</p></div></div>
+    <div class="col-md-3"><div class="stat-card bg-warning"><i class="bi bi-hourglass-split"></i><h3><%= stats.myPendingTasks %></h3><p>Pending / In Progress</p></div></div>
+    <div class="col-md-3"><div class="stat-card bg-success"><i class="bi bi-check2-circle"></i><h3><%= stats.myCompletedTasks %></h3><p>Completed</p></div></div>
+  <% } %>
+</div>
+
+<% if (currentUser.role === 'Admin' || currentUser.role === 'Manager') { %>
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h5 class="card-title mb-3">Task Status Overview</h5>
+    <canvas id="taskChart" height="90"></canvas>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+  const ctx = document.getElementById('taskChart');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Pending', 'Completed', 'Other (In Progress)'],
+      datasets: [{
+        data: [
+          <%= stats.pendingTasks %>,
+          <%= stats.completedTasks %>,
+          <%= Math.max(stats.totalTasks - stats.pendingTasks - stats.completedTasks, 0) %>
+        ],
+        backgroundColor: ['#ffc107', '#198754', '#0d6efd']
+      }]
+    },
+    options: { plugins: { legend: { position: 'bottom' } } }
+  });
+</script>
+<% } %>

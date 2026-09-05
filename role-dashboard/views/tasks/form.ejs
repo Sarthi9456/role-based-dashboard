@@ -1,0 +1,58 @@
+<h3 class="mb-4"><%= task ? 'Edit Task' : 'New Task' %></h3>
+
+<div class="card shadow-sm" style="max-width: 640px;">
+  <div class="card-body">
+    <form action="<%= task ? `/tasks/${task.id}?_method=PUT` : '/tasks' %>" method="POST">
+      <div class="mb-3">
+        <label class="form-label">Task Title</label>
+        <input type="text" name="title" class="form-control" value="<%= task ? task.title : '' %>" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea name="description" class="form-control" rows="3"><%= task ? (task.description || '') : '' %></textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Project</label>
+        <select name="projectId" class="form-select" required>
+          <option value="">Select project...</option>
+          <% projects.forEach(function(p) { %>
+            <option value="<%= p.id %>" <%= task && Number(task.projectId) === p.id ? 'selected' : '' %>><%= p.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Assigned Employee</label>
+        <select name="assignedTo" class="form-select">
+          <option value="">Unassigned</option>
+          <% employees.forEach(function(e) { %>
+            <option value="<%= e.id %>" <%= task && Number(task.assignedTo) === e.id ? 'selected' : '' %>><%= e.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label">Priority</label>
+          <select name="priority" class="form-select">
+            <% ['Low', 'Medium', 'High'].forEach(function(p) { %>
+              <option value="<%= p %>" <%= task && task.priority === p ? 'selected' : '' %>><%= p %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Due Date</label>
+          <input type="date" name="dueDate" class="form-control" value="<%= task && task.dueDate ? task.dueDate : '' %>">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Status</label>
+        <select name="status" class="form-select">
+          <% ['Pending', 'In Progress', 'Completed'].forEach(function(s) { %>
+            <option value="<%= s %>" <%= task && task.status === s ? 'selected' : '' %>><%= s %></option>
+          <% }) %>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Save</button>
+      <a href="/tasks" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+  </div>
+</div>

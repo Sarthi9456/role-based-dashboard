@@ -1,0 +1,38 @@
+{
+  "name": "role-based-dashboard",
+  "version": "1.0.0",
+  "description": "Role-Based Dashboard application with Admin, Manager and Employee roles (Node.js, Express, Sequelize, SQLite)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "db:migrate:undo": "npx sequelize-cli db:migrate:undo:all",
+    "db:seed": "npx sequelize-cli db:seed:all",
+    "db:seed:undo": "npx sequelize-cli db:seed:undo:all",
+    "db:reset": "npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
+    "db:fresh": "rimraf database.sqlite && npm run db:migrate && npm run db:seed"
+  },
+  "keywords": ["rbac", "dashboard", "express", "sequelize"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-async-errors": "^3.1.1",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.18.0",
+    "express-validator": "^7.2.0",
+    "method-override": "^3.0.0",
+    "sequelize": "^6.37.3",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4",
+    "rimraf": "^5.0.7",
+    "sequelize-cli": "^6.6.2"
+  }
+}
